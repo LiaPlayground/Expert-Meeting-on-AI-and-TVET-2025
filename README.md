@@ -2,14 +2,13 @@
 
 author: André Dietrich
 
+email:  LiaScript@web.de
+
 logo:   media/logo.jpg
 
 script: https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js
 
 import: https://raw.githubusercontent.com/liaTemplates/ABCjs/main/README.md
-
-import: https://raw.githubusercontent.com/liaTemplates/PyScript/main/README.md
-import: https://raw.githubusercontent.com/LiaScript/CodeRunner/master/README.md
 
 @CSV
 <script run-once style="display:block" modify="false">
@@ -410,6 +409,8 @@ csvToMarkdownTable("@0")
 }
 @end
 
+@burn: <span class="burning-text">@0</span>
+
 -->
 
 
@@ -419,11 +420,22 @@ csvToMarkdownTable("@0")
 
 # Expert-Meeting-on-AI-and-TVET-2025
 
+    {{0-1}}
+[qr-code](https://github.com/LiaPlayground/Expert-Meeting-on-AI-and-TVET-2025)
 
-## Agenda
+{{1}} What is LiaScript & what are the challenges in creating OERs?
+
+{{2}} Short interactive tutorial...
+
+{{3}} Building extensions
+
+{{4}} Programming in Markdown
+
+{{5}} Creating interactivity with AI
+
+{{6}} Classrooms?
 
 ## LiaScript
-
 
       {{1}}
 <section>
@@ -755,7 +767,17 @@ style="height: 680px; width: 100%; border: none"
 
 ## Extensions
 
-Algebrite
+http://algebrite.org/#API%20and%20scripting
+
+
+https://cdn.jsdelivr.net/npm/algebrite@1.4.0/dist/algebrite.bundle-for-browser.min.js
+
+``` 
+12 + 34
+```
+
+Algebrite.run(`@input`)
+
 
 ## Programming Extensions
 
@@ -882,7 +904,7 @@ dev.off()
 
 ### More Examples
 
-
+https://github.com/topics/liascript-template
 
 
 ### WebSerial & MicroPython
@@ -950,348 +972,132 @@ while True:
   sleep_ms(500)
 ```
 
+## JavaScript
 
-## WebSerial
 
-``` python
-import time
 
-# Infinite loop: prints a message every second.
-while True:
-    print("Hello from MicroPython!")
-    time.sleep(1)
-```
-<script>
-(async function() {
-  // Check if the Web Serial API is supported.
-  if (!("serial" in navigator)) {
-    console.error("Web Serial API is not supported in this browser.");
-    return;
+### Interactive Diagrams
+
+https://liascript.github.io/blog/creating-interactive-diagrams-with-chatgpt/
+
+
+$a =$ <script modify="false" input="range" step="1"   min="-1"  max="6"  value="2" output="a">@input</script>,
+$b =$ <script modify="false" input="range" step="0.1" min="-10" max="10" value="0" output="b">@input</script>,
+$c =$ <script modify="false" input="range" step="0.1" min="-10" max="10" value="0" output="c">@input</script>
+
+<script modify="false" run-once style="display: inline-block; width: 100%">
+"LIASCRIPT: ### $$f(x) = x^{@input(`a`)} + x * @input(`b`) + @input(`c`)$$"
+</script>
+
+<script run-once style="display: inline-block; width: 100%">
+function func(x) {
+  return Math.pow(x,  @input(`a`)) + @input(`b`) * x + @input(`c`);
+}
+
+function generateData() {
+  let data = [];
+  for (let i = -15; i <= 15; i += 0.01) {
+    data.push([i, func(i)]);
   }
-  
-  // Declare connection-related variables for later cleanup.
-  let port = null;
-  let reader = null;
-  
-  try {
-    // Request and open the serial port.
-    port = await navigator.serial.requestPort();
-    await port.open({ baudRate: 115200 });
-    
-    // Create a TextEncoder instance.
-    const encoder = new TextEncoder();
-    // Function to stop any currently running code by sending Ctrl-C.
-    async function stopCurrentProgram() {
-      try {
-        const writer = port.writable.getWriter();
-        // Send Ctrl-C (ASCII 0x03) to interrupt any running code.
-        await writer.write(encoder.encode("\x03"));
-        // Wait briefly to allow the interrupt to be processed.
-        await new Promise(resolve => setTimeout(resolve, 100));
-        // Send a second Ctrl-C in case the first one was missed.
-        await writer.write(encoder.encode("\x03"));
-        writer.releaseLock();
-      } catch (e) {
-        console.error("Error sending Ctrl-C:", e);
-      }
-    }
-    
-    // Stop any running code before sending new code.
-    await stopCurrentProgram();
-    
-    // Retrieve the entire Python code from the liascript input.
-    const pythonCode = `@input(0)`;
-    
-    // Function to send code using MicroPython's paste mode.
-    // In paste mode, the REPL buffers all lines until Ctrl‑D is received,
-    // then it compiles and executes the entire code block at once.
-    async function sendCodeInPasteMode(code) {
-      const writer = port.writable.getWriter();
-      // Enter paste mode (Ctrl‑E, ASCII 0x05).
-      await writer.write(encoder.encode("\x05"));
-      // Wait briefly for paste mode to be activated.
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      // Split the code into lines, preserving all indentation.
-      const codeLines = code.split(/\r?\n/);
-      for (const line of codeLines) {
-        // Send each line exactly as-is, with CR+LF.
-        await writer.write(encoder.encode(line + "\r\n"));
-      }
-      // Exit paste mode by sending Ctrl‑D (ASCII 0x04).
-      await writer.write(encoder.encode("\x04"));
-      writer.releaseLock();
-      send.lia("LIA: terminal");
-    }
-    
-    // Function that sends the code and reads output until the REPL prompt (">>>") is detected.
-    // This ensures the entire block is executed before further input is allowed.
-    async function sendCodeAndWaitForPrompt(code) {
-      await sendCodeInPasteMode(code);
-      let outputBuffer = "";
-      const tempReader = port.readable.getReader();
-      const decoder = new TextDecoder();
-      let promptFound = false;
-      
-      while (!promptFound) {
-        const { value, done } = await tempReader.read();
-        if (done) break;
-        if (value) {
-          const text = decoder.decode(value);
-          outputBuffer += text;
-          console.stream(text);
-          // Look for the REPL prompt (adjust if your prompt differs).
-          if (outputBuffer.includes(">>>")) {
-            promptFound = true;
-          }
-        }
-      }
-      await tempReader.releaseLock();
-      return outputBuffer;
-    }
-    
-    // Send the Python code and wait until the prompt is detected.
-    await sendCodeAndWaitForPrompt(pythonCode);
-    console.log("Python code executed and prompt detected.");
-    
-    // Now that execution is complete, enable terminal input.
-    send.lia("LIA: terminal");
-    
-    // Start a global read loop to capture and display subsequent output.
-    reader = port.readable.getReader();
-    const globalDecoder = new TextDecoder();
-    (async function readLoop() {
-      try {
-        while (true) {
-          const { value, done } = await reader.read();
-          if (done) {
-            console.debug("Stream closed");
-            send.lia("LIA: stop");
-            break;
-          }
-          if (value) {
-            console.stream(globalDecoder.decode(value));
-          }
-        }
-      } catch (error) {
-        console.error("Read error:", error);
-      } finally {
-        try { reader.releaseLock(); } catch (e) { /* ignore */ }
-      }
-    })();
-    
-    // Handler to send terminal input lines to MicroPython.
-    send.handle("input", input => {
-      (async function() {
-        try {
-          const writer = port.writable.getWriter();
-          // Send the terminal input (preserving any whitespace) with CR+LF.
-          await writer.write(encoder.encode(input + "\r\n"));
-          writer.releaseLock();
-        } catch (e) {
-          console.error("Error sending input to MicroPython:", e);
-        }
-      })();
-    });
-    
-    // Handler to clean up all connections and variables when a "stop" command is received.
-    send.handle("stop", async () => {
-      console.log("Cleaning up connections and stopping execution.");
-      
-      // Cancel the reader if it exists.
-      if (reader) {
-        try {
-          await reader.cancel();
-        } catch (e) {
-          console.error("Error canceling reader:", e);
-        }
-        try { reader.releaseLock(); } catch (e) { /* ignore */ }
-      }
-      
-      // Close the serial port if it's open.
-      if (port) {
-        try {
-          await port.close();
-        } catch (e) {
-          console.error("Error closing port:", e);
-        }
-      }
-      
-      // Reset connection variables.
-      port = null;
-      reader = null;
-      console.log("Cleanup complete.");
-    });
-    
-  } catch (error) {
-    console.error("Error connecting to the MicroPython device:", error);
-    send.lia("LIA: stop");
-  }
-})();
+  return data;
+}
 
-"LIA: wait"
+let option = {
+  grid: { top: 40, left: 50, right: 40, bottom: 50 },
+  xAxis: {
+    name: 'x',
+    minorTick: { show: true },
+    splitLine: { lineStyle: { color: '#999' } },
+    minorSplitLine: { show: true, lineStyle: { color: '#ddd' } }
+  },
+  yAxis: {
+    name: 'y', min: -10, max: 10,
+    minorTick: { show: true },
+    splitLine: { lineStyle: { color: '#999' } },
+    minorSplitLine: { show: true, lineStyle: { color: '#ddd' } }
+  },
+  series: [
+    {
+      type: 'line',
+      showSymbol: false,
+      data: generateData()
+    }
+  ]
+};
+
+"HTML: <lia-chart option='" + JSON.stringify(option) + "'></lia-chart>"
 </script>
 
 
+### Interactive Geometry
 
 
-## WebSerial 2
+> Source: https://github.com/LiaTemplates/GGBScript
+>
+> A GGBScript JavaScript interpreter based on JavaScript.
+>
+> `import: https://raw.githubusercontent.com/LiaTemplates/GGBScript/refs/heads/main/README.md`
 
-``` python
-import time
 
-# Infinite loop: prints a message every second.
-while True:
-    print("Hello from MicroPython!")
-    time.sleep(1)
+``` js @GGBScript
+Titel("Punkt A & B");
+
+// Definiere einen Punkt
+const A = Punkt(1, 2, "A");
+const B = Punkt([4, 6], "B");
 ```
-<script>
-(async function() {
-  // Check if the Web Serial API is supported.
-  if (!("serial" in navigator)) {
-    console.error("Web Serial API is not supported in this browser.");
-    return;
-  }
-  
-  // Declare these variables with let so they can be reassigned during cleanup.
-  let port = null;
-  let reader = null;
-  
-  try {
-    // Request a serial port from the user.
-    port = await navigator.serial.requestPort();
-    // Open the port at a typical MicroPython baud rate.
-    await port.open({ baudRate: 115200 });
-    
-    // Create a TextEncoder instance.
-    const encoder = new TextEncoder();
-    
-    // Function to stop any currently running code by sending Ctrl-C.
-    async function stopCurrentProgram() {
-      try {
-        const writer = port.writable.getWriter();
-        // Send Ctrl-C (ASCII 0x03) to interrupt any running code.
-        await writer.write(encoder.encode("\x03"));
-        // Wait briefly to allow the interrupt to be processed.
-        await new Promise(resolve => setTimeout(resolve, 100));
-        // Send a second Ctrl-C in case the first one was missed.
-        await writer.write(encoder.encode("\x03"));
-        writer.releaseLock();
-      } catch (e) {
-        console.error("Error sending Ctrl-C:", e);
-      }
-    }
-    
-    // Stop any running code before sending new code.
-    await stopCurrentProgram();
-    
-    // Retrieve the Python code from the liascript input.
-    const pythonCode = `@input(0)`;
-    
-    // Function to send code using MicroPython's paste mode.
-    async function sendCodeInPasteMode(code) {
-      const writer = port.writable.getWriter();
-      // Enter paste mode by sending Ctrl-E (0x05).
-      await writer.write(encoder.encode("\x05"));
-      // Wait briefly for paste mode to be activated.
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      // Split the code preserving all whitespace (supports both \n and \r\n).
-      const codeLines = code.split(/\r?\n/);
-      for (const line of codeLines) {
-        // Send each line exactly as-is with CR+LF.
-        await writer.write(encoder.encode(line + "\r\n"));
-      }
-      // End paste mode by sending Ctrl-D (0x04).
-      await writer.write(encoder.encode("\x04"));
-      writer.releaseLock();
-    }
-    
-    // Send the new Python code in paste mode.
-    await sendCodeInPasteMode(pythonCode);
-    
-    console.log("New Python code sent to the MicroPython device in paste mode.");
-    send.lia("LIA: terminal");
-    
-    // Set up a reader to capture stdout from the MicroPython device.
-    reader = port.readable.getReader();
-    const decoder = new TextDecoder();
-    
-    (async function readLoop() {
-      try {
-        while (true) {
-          const { value, done } = await reader.read();
-          if (done) {
-            console.debug("Stream closed");
-            send.lia("LIA: stop");
-            break;
-          }
-          if (value) {
-            console.stream(decoder.decode(value));
-          }
-        }
-      } catch (error) {
-        console.error("Read error:", error);
-      } finally {
-        reader.releaseLock();
-      }
-    })();
-    
-    // Add a method to handle terminal input lines to be sent to MicroPython.
-    send.handle("input", input => {
-      (async function() {
-        try {
-          const writer = port.writable.getWriter();
-          // Send the terminal input (preserving any leading whitespace) with CR+LF.
-          await writer.write(encoder.encode(input + "\r\n"));
-          writer.releaseLock();
-        } catch (e) {
-          console.error("Error sending input to MicroPython:", e);
-        }
-      })();
-    });
-    
-    // Add a method to handle "stop" commands and clean up connections.
-    send.handle("stop", async () => {
-      console.log("Cleaning up connections and stopping execution.");
-      
-      try {
-        // Interrupt any running code.
-        const writer = port.writable.getWriter();
-        await writer.write(encoder.encode("\x03"));
-        writer.releaseLock();
-      } catch (e) {
-        console.error("Error sending interrupt command:", e);
-      }
-      
-      // Cancel the reader if it exists.
-      if (reader) {
-        try {
-          await reader.cancel();
-          reader.releaseLock();
-        } catch (e) {
-          console.error("Error canceling reader:", e);
-        }
-      }
-      
-      // Close the serial port if it is open.
-      try {
-        await port.close();
-      } catch (e) {
-        console.error("Error closing port:", e);
-      }
-      
-      // Reset variables.
-      port = null;
-      reader = null;
-      console.log("Cleanup complete.");
-    });
-    
-  } catch (error) {
-    console.error("Error connecting to the MicroPython device:", error);
-    send.lia("LIA: stop");
-  }
-})();
 
-"LIA: wait"
+### Interactive Geometry 2
+
+A = (<script input="range" min="0" max="100" value="50" step="1" default="50" output="A0">
+@input
+</script>,
+<script input="range" min="-100" max="100" value="50" step="1" default="50" output="A1">
+@input
 </script>
+)
+
+B = (<script input="range" min="0" max="100" value="96" step="1" default="96" output="B0">
+@input
+</script>,
+<script input="range" min="-100" max="100" value="27" step="1" default="27" output="B1">
+@input
+</script>
+)
+
+
+C = (<script input="range" min="0" max="100" value="20" step="1" default="20" output="C0">
+@input
+</script>,
+<script input="range" min="-100" max="100" value="20" step="1" default="20" output="C1">
+@input
+</script>
+)
+
+Rotation: 
+<script input="range" min="0" max="360" value="0" step="1" default="0" output="rotation">
+@input
+</script>°
+
+
+``` js @GGBScript
+UserAxisLimits(0,150,0,60);
+
+const A = Punkt(@input(`A0`), @input(`A1`), "A");
+const B = Punkt(@input(`B0`), @input(`B1`), "B");
+const C = Punkt(@input(`C0`), @input(`C1`), "C");
+
+const P = Polygon("A", "B", "C");
+
+Farbe(P, "red");
+
+const M = Mittelpunkt(P);
+
+const P2 = Rotation(P, M, @input(`rotation`));
+
+Farbe(P2, "blue");
+
+Kreis(M, 16, "Kreis");
+```
+
+## Classrooms ?
