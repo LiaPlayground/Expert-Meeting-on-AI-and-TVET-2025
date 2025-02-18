@@ -961,15 +961,30 @@ alvik.begin()
 alvik.left_led.set_color(0, 0, 0)
 alvik.right_led.set_color(0, 0, 0)
 
-# Blink the two LEDs continuously
 while True:
-  alvik.left_led.set_color(1, 0, 0) # Left RGB LED set to Red Color
-  alvik.right_led.set_color(1, 0, 0) # Right RGB LED set to Red Color
-  sleep_ms(500) 
+  # Move forward
+  alvik.set_wheels_speed(50, 50)  # Both motors forward at speed 50
+  alvik.left_led.set_color(1, 0, 0)  # Red LED glows to indicate forward motion
+  alvik.right_led.set_color(1, 0, 0) # Red LED glows to indicate forward motion
+  sleep_ms(1000)  # Move forward for 2 seconds
 
-  alvik.left_led.set_color(0, 0, 0)
-  alvik.right_led.set_color(0, 0, 0)
-  sleep_ms(500)
+  # Stop for 1 second
+  alvik.brake() # note this special function
+  alvik.left_led.set_color(0, 0, 0)  # Turn off all the LEDs
+  alvik.right_led.set_color(0, 0, 0) # Turn off all the LEDs
+  sleep_ms(1000)
+
+  # Move backward
+  alvik.set_wheels_speed(-50, -50)  # Both motors backward at speed -50
+  alvik.left_led.set_color(0, 1, 0)  # Green LED glows to indicate backward motion
+  alvik.right_led.set_color(0, 1, 0) # Green LED glows to indicate backward motion
+  sleep_ms(1000)  # Move backward for 1 seconds
+
+  # Stop for 1 second
+  alvik.brake()
+  alvik.left_led.set_color(0, 0, 0)  # Turn off all the LEDs
+  alvik.right_led.set_color(0, 0, 0) # Turn off all the LEDs
+  sleep_ms(1000)
 ```
 
 ## JavaScript
