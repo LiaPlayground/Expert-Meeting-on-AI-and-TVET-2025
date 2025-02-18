@@ -2,6 +2,8 @@
 
 author: André Dietrich
 
+logo:   media/logo.jpg
+
 script: https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js
 
 import: https://raw.githubusercontent.com/liaTemplates/ABCjs/main/README.md
@@ -412,7 +414,55 @@ csvToMarkdownTable("@0")
 
 # Expert-Meeting-on-AI-and-TVET-2025
 
-## Introduction
+
+## Agenda
+
+## LiaScript
+
+
+      {{1}}
+<section>
+
+#### Lack of technical skills
+
+    --{{1}}--
+You can be an expert of Arts, Medicine, or History, but you might not be a developer. This is a significant issue, as most Open Educational Resources are created by teachers, professors, or researchers who may not be familiar with the technical aspects of digital content creation. If we are honest, the medium has evolved — from stone carvings and clay tablets to paper and writing, books and printing, and now computers and __PDFs__ — but the representation has remained largely the same. Despite the vast capabilities of computers, such as enabling speech, immersive 3D experiences, and interactive content, many OERs still do not fully leverage these possibilities.
+
+![history of writing](media/history.jpg)
+
+</section>  
+
+      {{2}}
+<section>
+
+#### Separation by Tools, Platforms, and Formats
+
+    --{{2}}--
+There are numerous platforms, tools, and formats available for creating digital content. However, each platform creates its own isolated ecosystem with unique capabilities and limitations. Most of these solutions do not support multiple authors or versioning, which hinders collaborative content creation. Utilizing version control systems and platforms like GitHub or GitLab, which offer open review systems, discussion forums, wikis, and more, could address the majority of challenges we face in the creation of OER.
+
+![islands](media/islands.png)
+
+</section>
+
+      {{3}}
+<section>
+
+#### OER has _No Language & No Collaboration_
+
+    --{{3}}--
+This brings us to the elephant in the room. In the open-source world, communities typically gather around programming languages, libraries, or frameworks. However, in the OER world, there is no equivalent creators mostly work on their own. Furthermore, most OER authoring tools offer a word processor-like environment, requiring users to memorize various point-and-click sequences. If there is no dedicated button, then a feature becomes inaccessible. This limitation significantly restricts the creativity and flexibility of content creators.
+
+![tower of babel](media/babel.jpg)
+
+</section>
+
+
+### History
+
+!?[Industrial eLab Magdeburg](https://www.youtube.com/watch?v=bICfKRyKTwE)
+
+
+### Hello World
 
     --{{0}}--
 !?[](media/liascript_0.mp4)
@@ -427,9 +477,9 @@ The biggest drawback, however, is that it is @burn(static as hell) and offers no
 !?[](media/liascript_1.mp4)
 So my creators set out to rethink Markdown from the ground up...
 
-?[Giorgio Moroder](https://music.youtube.com/watch?v=zhl-Cs1-sG4&si=fwB6LT2I0rQ0_CGE&start=300&end=312&autoplay=1)<!-- style="border-radius: 10px; border: none" -->
+?[Giorgio Moroder](https://music.youtube.com/watch?v=zhl-Cs1-sG4&si=fwB6LT2I0rQ0_CGE&start=301&end=312&autoplay=1)<!-- style="border-radius: 10px; border: none" -->
 
-> ... Once you free your mind about a concept of Harmony and of music being "correct" you can do whatever you want ...
+> <marquee>... Once you free your mind about a concept of Harmony and of music being "correct" you can do whatever you want ...</marquee>
 >
 > -- Giorgio Moroder (inventor of disco music)
 
@@ -521,8 +571,115 @@ You might have noticed that this document is being used like a PowerPoint presen
 However, our intention was to utilize LiaScript in various contexts.
 With LiaScript, you can create presentations, enable self-study through browser-based text-to-speech output, or read the content as a simple yet interactive textbook, without animations.
 
+### Decentralized Sharing
 
-### # One Document multiple Representations
+    --{{0}}--
+You might be wondering what toolchain, compiler, or setup is required to create such documents. The answer is simple: none. Everything happens within the browser.
+LiaScript is a Progressive Web App that can fetch content from various locations and through different protocols. The only requirement is a link to your document, which is attached as a URL parameter. You can share this link with your colleagues or clients, allowing them to directly access your content without the need for login, registration, or installation.
+
+<!-- style="border: 1px solid black;
+border-radius: 10px;
+display: inline;
+box-shadow: inset 0 4px 4px rgba(0, 0, 0, 0.1);
+padding: 15px;
+line-height: 60px;
+font-size: 20px;" -->
+https://liascript.github.io/course/?https://raw.githubusercontent.com/LiaPlayground/Expert-Meeting-on-AI-and-TVET-2025/main/README.md
+
+    --{{1}}--
+However, registering on GitHub or hosting content on your own server can be challenging for content creators. To address this, we have integrated various web technologies that enable sharing without the need for a server at all. You can easily use these technologies in your projects as well.
+
+      {{2}}
+<article>
+
+### Interplanetary File System (IPFS)
+
+    --{{2}}--
+As a web developer, you should keep an eye on the Interplanetary File System (IPFS). IPFS is a protocol and network designed to create a content-addressable, peer-to-peer method of storing and sharing content in a distributed file system. It even enables the creation of distributed applications.
+
+![Screenshot IPFS](media/ipfs.jpg "Screenshot from https://ipfs.tech")
+
+    --{{3}}--
+I won't go into further detail, but to our knowledge, IPFS is supported by browsers like Brave, Opera, and Aggregore.
+
+      {{3}}
+* __ Brave: https://brave.com __
+* __ Opera: https://www.opera.com __
+* __ Agregore: https://agregore.mauve.moe __
+
+      {{4}}
+  - Hypercore: https://hypercore-protocol.org
+  - BitTorrent: https://en.wikipedia.org/wiki/BitTorrent
+  - Gemini: https://gemini.circumlunar.space
+  - IPFS: https://ipfs.tech
+
+    --{{4}}--
+Aggregore is particularly noteworthy for its support of various protocols, including Hypercore, BitTorrent, and Gemini, next to IPFS.
+
+</article>
+
+
+       {{5}}
+<article>
+
+### Onion-Share
+
+    --{{5}}--
+If you are seeking a more secure and anonymously method to share your content, you might want to consider OnionShare. OnionShare is an open-source tool that allows you to securely and anonymously share files of any size. It works by starting a web server directly on your computer and making it accessible through an unguessable Tor web address. Thus LiaScript content can also be shared as an onion-URL via the Tor network.
+
+![OnionShare](https://docs.onionshare.org/2.6.2/en/_images/tabs.png)
+
+https://onionshare.org
+
+    --{{6}}--
+We have identified OnionShare as a valuable tool for delivering educational content to regions where internet access is restricted or monitored. This is particularly important in areas where education is prohibited for girls, women, minorities, or other marginalized groups. By using OnionShare, educators can bypass censorship and surveillance, providing crucial learning materials to those who need them most.
+
+      {{6}}
+![Taliban News](media/taliban.png "Sources: https://taz.de/Repressionen-in-Afghanistan/!5926105/ | https://www.deutschlandfunkkultur.de/afghanistan-bildung-100.html | https://www.business-standard.com/article/international/taliban-blocks-23-mn-websites-in-afghanistan-over-immoral-content-122082600086_1.html | https://www.reuters.com/world/asia-pacific/afghan-girls-struggle-with-poor-internet-they-turn-online-classes-2023-03-27/")
+
+      {{7}}
+<section>
+
+    --{{7}}--
+For more information checkout out the following resources:
+
+HowTo at: https://liascript.github.io/blog/sharing-via-tor-and-onion-share/
+
+!?[Sharing LiaScript via Tor](https://www.youtube.com/watch?v=-y7I3bIeB_I&start=621 "Tutorial on sharing LiaScript courses via the Tor-Network with OnionShare")
+
+</section>
+
+</article>
+
+      {{8}}
+<article>
+
+### WebTorrent
+
+    --{{8}}--
+Last but not least, WebTorrent is a streaming torrent client for both web browsers and desktop applications. Written entirely in JavaScript, WebTorrent uses WebRTC for true peer-to-peer transport. No browser plugin, extension, or installation is required.
+
+![WebTorrent](media/webtorrent.jpg "Screenshot of the WebTorrent website: https://webtorrent.io")
+
+    --{{9}}--
+If you take a look at their documentation, it is quite straightforward. Within a few minutes, you can create an app that shares files via WebTorrent.
+
+      {{9}}
+https://webtorrent.io/docs
+
+    --{{10}}--
+You can try this out on [instant.io](https://instant.io); simply drag and drop a file and share the link or copy the magnet-URI to LiaScript. Once the content is loaded by LiaScript, every user also becomes a seeder of the content. This ensures that the content remains available even if the original creator is offline.
+
+      {{10}}
+https://instant.io
+
+</article>
+
+## Tutorial
+
+![](https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdXh1YW10MnhuZWx2MWNwbDNyeHJ1OTczMDN5NjZoeTkzcGgxZG54diZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xkmQfH1TB0dLW/giphy.gif)<!-- style="width: 100%" -->
+
+### One Document multiple Representations
 
                   --{{0}}--
 Hi, I am a Markdown document that can be presented in
@@ -567,7 +724,29 @@ information about the animation step.
                   {{3}}
 > __To disable the google translation you have to reload this site.__
 
-## LiaScript
+### Embeddings
+
+??[falstad: Circuit Simulator](https://www.falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgpABZsKBTAWjDACgAncDQkPK7Hhp8qVMJDYBnEIOH9aNPCKjgQAMwCGAG0kM2Ad2695YHjIQoobAMYyh5y6d7YLtKLHhgkCaMWwkwPCwEDDwvFEsWUTYtOzkBexdLMRAmGDhiQhoETJRcDDBsGkgEYQkANwUlJKrlUVoqJHqYBE44h1qasTg2AHs3LJVi0hA0dxKVS2FsPpkQQaph4lHRWCQIS3oZ-qoFhpGYQhQmtdGzgTZBOYAxCFX4ODuPSHEIFhAAYQ0ABw1rAEsAC4aAB21j0V2EtxU6QgYFgbwgAEkQQATACu1mBYIhSio0JSr1SEAASgxJP9JNjwWwABaqaZsIA)
+
+
+#### The Browser is the new OS
+<!--
+persistent: true
+-->
+
+> “Any application that can be written in JavaScript, will eventually be written in JavaScript.”
+>
+> -- Atwood's Law
+
+    {{1}}
+??[linux](https://bellard.org/jslinux/vm.html?url=alpine-x86.cfg&mem=192)<!--
+style="height: 680px; width: 100%; border: none"
+-->
+
+
+### Any Questions
+
+
 
 ## Extensions
 
