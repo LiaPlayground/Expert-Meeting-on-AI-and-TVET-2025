@@ -412,6 +412,11 @@ csvToMarkdownTable("@0")
 
 -->
 
+
+[![LiaScript](https://raw.githubusercontent.com/LiaScript/LiaScript/master/badges/course.svg)](https://liascript.github.io/course/?https://raw.githubusercontent.com/LiaPlayground/Expert-Meeting-on-AI-and-TVET-2025/refs/heads/main/README.md#1)
+
+[![LiveEditor](https://raw.githubusercontent.com/LiaScript/LiaScript/master/badges/edit.svg)](https://liascript.github.io/LiveEditor/?/show/file/https://raw.githubusercontent.com/LiaPlayground/Expert-Meeting-on-AI-and-TVET-2025/refs/heads/main/README.md)
+
 # Expert-Meeting-on-AI-and-TVET-2025
 
 
