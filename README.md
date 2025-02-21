@@ -482,7 +482,7 @@ This brings us to the elephant in the room. In the open-source world, communitie
 ### Hello World
 
     --{{0}}--
-!?[](media/liascript_0.mp4)
+!?[](media/liascript_0.3gp)
 Hello, my name is LiaScript, I am a Markdown-based language that has been specially developed to create educational materials.
 The advantage of Markdown is that it is already widely used, easy to write and read, and supported by many platforms.
 The biggest drawback, however, is that it is @burn(static as hell) and offers no interactivity.
